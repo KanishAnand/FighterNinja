@@ -1,5 +1,6 @@
-class cube{
+class Cube{
     constructor(){
+        this.VELOCITY = 10;
         this.initRenderData();
     }
     
@@ -10,11 +11,5 @@ class cube{
     }
 
     drawCube(){
-    }
-
-    rotate(){
-        this.obj.rotation.x += 0.01;
-        this.obj.rotation.y += 0.01;
-        this.obj.rotation.z += 0.01;
     }
 }
