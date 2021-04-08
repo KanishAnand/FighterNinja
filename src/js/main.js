@@ -2,8 +2,8 @@ main();
 
 function main() {
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth/ window.innerHeight, 0.1, 100);
-    camera.position.z = 3;
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, 0.1, 1000);
+    camera.position.z = 7;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -17,8 +17,10 @@ function main() {
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-    cube = new cube();
-    scene.add(cube.obj);
+    scenery = new Scenery();
+    scene.add(scenery.obj);
+    // cube = new cube();
+    // scene.add(cube.obj);
 
     //game logic
     var update = function(){
