@@ -4,7 +4,7 @@ class Scenery{
     }
     
     initRenderData(){
-        var geometry = new THREE.CubeGeometry(10000,10000,10000);
+        var geometry = new THREE.BoxGeometry(10000,10000,10000);
         var cubeMaterials = [
             new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("src/img/scenery/front.png"), side: THREE.DoubleSide}),
             new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("src/img/scenery/back.png"), side: THREE.DoubleSide}),

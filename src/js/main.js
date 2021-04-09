@@ -1,21 +1,20 @@
-var cube, camera;
+var plane, camera;
 main();
 
 function onDocumentKeyDown(event) {
     var keyCode = event.which;
-    console.log(keyCode);
     if (keyCode == 38) { // up
-        camera.position.z -= cube.VELOCITY;
-        cube.obj.position.z -= cube.VELOCITY;
+        camera.position.z -= plane.VELOCITY;
+        plane.obj.position.z -= plane.VELOCITY;
     } else if (keyCode == 40) { // down
-        camera.position.z += cube.VELOCITY;
-        cube.obj.position.z += cube.VELOCITY;
+        camera.position.z += plane.VELOCITY;
+        plane.obj.position.z += plane.VELOCITY;
     } else if (keyCode == 37) { // left
-        camera.position.x -= cube.VELOCITY;
-        cube.obj.position.x -= cube.VELOCITY;
+        camera.position.x -= plane.VELOCITY;
+        plane.obj.position.x -= plane.VELOCITY;
     } else if (keyCode == 39) { // right
-        camera.position.x += cube.VELOCITY;
-        cube.obj.position.x += cube.VELOCITY;
+        camera.position.x += plane.VELOCITY;
+        plane.obj.position.x += plane.VELOCITY;
     }
 };
 
@@ -41,8 +40,8 @@ function main() {
     scenery = new Scenery();
     scene.add(scenery.obj);
     
-    cube = new Cube();
-    scene.add(cube.obj);
+    plane = new Plane(scene);
+    // scene.add(plane.obj);
 
     //game logic
     var update = function(){
