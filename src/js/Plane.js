@@ -1,6 +1,7 @@
 class Plane{
     constructor(){
-        this.VELOCITY = 10;
+        this.dist = 0;
+        this.VELOCITY = 1;
         this.initRenderData();
     }
     
