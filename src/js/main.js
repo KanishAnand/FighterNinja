@@ -1,3 +1,4 @@
+var stars = [];
 var plane, camera;
 main();
 
@@ -40,11 +41,15 @@ function main() {
     scenery = new Scenery();
     scene.add(scenery.obj);
     
-    plane = new Plane(scene);
-    // scene.add(plane.obj);
+    plane = new Plane();
+    scene.add(plane.obj);
 
     //game logic
     var update = function(){
+        for(i = 0; i < 0; i++){
+            // both stars and plane will have same y coordinate
+            stars.push(new Star(scene, (Math.random() - 0.5) *50, plane.obj.position.y, (Math.random() - 1)*50));
+        }
     };
 
     var render = function(){
