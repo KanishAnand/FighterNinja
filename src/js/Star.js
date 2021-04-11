@@ -8,7 +8,7 @@ class Star{
     initRenderData(scene, x, y, z){
         var loader = new THREE.GLTFLoader();
         loader.load("src/models/star.glb", (obj) => {
-            obj.scene.scale.set(0.1,0.1,0.1);
+            obj.scene.scale.set(0.15,0.15,0.15);
             obj.scene.position.x = x;
             obj.scene.position.y = y;
             obj.scene.position.z = z;

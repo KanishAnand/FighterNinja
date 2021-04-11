@@ -34,7 +34,7 @@ function removeStars(){
 
     for(const star of this.stars){
         if(star.obj){
-            if(star.obj.position.z > plane.obj.position.z){
+            if(star.obj.position.z > camera.position.z){
                 scene.remove(star.obj);
             }
             else{
@@ -127,8 +127,7 @@ function main() {
     scenery = new Scenery();
     scene.add(scenery.obj);
     
-    plane = new Plane();
-    scene.add(plane.obj);
+    plane = new Plane(scene);
 
     camera.position.y += 3;
     camera.rotation.x += -0.2;
