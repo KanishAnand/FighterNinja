@@ -29,19 +29,29 @@ function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 } 
 
+function removeStars(){
+    newStars = []
+    for(i = 0; i < stars.length; i++){
+        if(stars[i].obj.position.z > plane.obj.position.z){
+            scene.remove(stars[i].obj);
+        }
+        else{
+            newStars.push(stars[i]);
+        }
+    }
+
+    stars = newStars;
+}
+
 function createStars(){
     if(plane.dist < 10){
         return;
     }
-
-    for(i = 0; i < stars.length; i++){
-        scene.remove(stars[i]);
-    }
     
-    // stars = []
+    removeStars();
     plane.dist = 0;
 
-    numStars = parseInt(randomNumber(0,5));
+    numStars = parseInt(randomNumber(0,7));
     var x = plane.obj.position.x, deltaX = 10;
     var z = plane.obj.position.z, deltaZ = -5;
     
