@@ -1,0 +1,19 @@
+#info {
+  position: absolute;
+  font-size: 25px;
+  width: 100%;
+  color: white;
+  z-index: 100;
+  display: block;
+}
+
+#score {
+  margin: 10px;
+  text-align: left;
+}
+
+#health {
+  margin: 15px;
+  margin-top: 10px;
+  text-align: left;
+}

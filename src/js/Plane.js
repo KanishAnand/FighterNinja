@@ -1,6 +1,8 @@
 class Plane{
     constructor(){
         this.dist = 0;
+        this.score = 0;
+        this.health = 100;
         this.VELOCITY = 1;
         this.initRenderData();
     }

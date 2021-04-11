@@ -1,6 +1,7 @@
 class Star{
     constructor(scene, x, y, z){
         this.AngularVelocity = 0.05;
+        this.scoreInc = 1;
         this.initRenderData(scene, x, y, z);
     }
     

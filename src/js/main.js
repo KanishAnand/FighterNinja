@@ -85,7 +85,7 @@ function checkCollision(){
     for(const star of this.stars){
         if(star.obj){
             if(checkTouching(plane.obj, star.obj)){
-                console.log("HITTT");
+                plane.score += star.scoreInc;
                 scene.remove(star.obj);
             }
             else{
@@ -95,6 +95,11 @@ function checkCollision(){
     }
 
     stars = newStars;
+}
+
+function updateHUD(){
+    document.getElementById("score").innerHTML = "Score: " + plane.score;
+    document.getElementById("health").innerHTML = "Health: " + plane.health;
 }
 
 function main() {
@@ -135,6 +140,9 @@ function main() {
         checkCollision();
         createStars();
         rotateStars();
+
+        //update HUD
+        updateHUD();
     };
     
     var render = function(){
