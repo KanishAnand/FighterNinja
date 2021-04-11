@@ -29,26 +29,26 @@ function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 } 
 
-function removeStars(){
-    newStars = []
-    for(i = 0; i < stars.length; i++){
-        if(stars[i].obj.position.z > plane.obj.position.z){
-            scene.remove(stars[i].obj);
-        }
-        else{
-            newStars.push(stars[i]);
-        }
-    }
+// function removeStars(){
+//     newStars = [];
 
-    stars = newStars;
-}
+//     for(i = 0; i < this.stars.length; i++){
+//         if(this.stars[i].obj.position.z > plane.obj.position.z){
+//             scene.remove(this.stars[i].obj);
+//         }
+//         else{
+//             newStars.push(this.stars[i]);
+//         }
+//     }
+
+//     this.stars = newStars;
+// }
 
 function createStars(){
     if(plane.dist < 10){
         return;
     }
     
-    removeStars();
     plane.dist = 0;
 
     numStars = parseInt(randomNumber(0,7));
@@ -57,15 +57,55 @@ function createStars(){
     
     for(i = 0; i < numStars; i++){
         // both stars and plane will have same y coordinate
-        stars.push(new Star(scene, randomNumber(x - deltaX, x + deltaX), plane.obj.position.y, randomNumber(z + deltaZ, z + 8*deltaZ)));
+        this.stars.push(new Star(scene, randomNumber(x - deltaX, x + deltaX), plane.obj.position.y, randomNumber(z + deltaZ, z + 8*deltaZ)));
     }
 }
 
 function rotateStars(){
-    for(i = 0; i < stars.length; i++){
-        stars[i].obj.rotation.y += stars[i].AngularVelocity;
+    console.log(this.stars.length);
+    // for(star in this.stars){
+    //     star.obj.rotatation.y += star.AngularVelocity;
+    // }
+    for(i = 0; i < this.stars.length; i++){
+        this.stars[i].obj.rotation.y += this.stars[i].AngularVelocity;
     }
 }
+
+// function checkTouching(a, d) {
+//     let b1 = a.position.y - a.geometry.parameters.height / 2;
+//     let t1 = a.position.y + a.geometry.parameters.height / 2;
+//     let r1 = a.position.x + a.geometry.parameters.width / 2;
+//     let l1 = a.position.x - a.geometry.parameters.width / 2;
+//     let f1 = a.position.z - a.geometry.parameters.depth / 2;
+//     let B1 = a.position.z + a.geometry.parameters.depth / 2;
+//     let b2 = d.position.y - d.geometry.parameters.height / 2;
+//     let t2 = d.position.y + d.geometry.parameters.height / 2;
+//     let r2 = d.position.x + d.geometry.parameters.width / 2;
+//     let l2 = d.position.x - d.geometry.parameters.width / 2;
+//     let f2 = d.position.z - d.geometry.parameters.depth / 2;
+//     let B2 = d.position.z + d.geometry.parameters.depth / 2;
+//     if (t1 < b2 || r1 < l2 || b1 > t2 || l1 > r2 || f1 > B2 || B1 < f2) {
+//       return false;
+//     }
+//     return true;
+//   }
+
+// function checkCollision(){
+//     newStars = [];
+
+//     for(i = 0; i < stars.length; i++){
+//         ans = checkTouching(plane.obj, stars[i].obj);
+//         if(ans == 1){
+//             console.log("HITTT");
+//             scene.remove(stars[i].obj);
+//         }
+//         else{
+//             newStars.push(stars[i]);
+//         }
+//     }
+
+//     stars = newStars;
+// }
 
 function main() {
     scene = new THREE.Scene();
@@ -97,7 +137,8 @@ function main() {
 
     //game logic
     var update = function(){
-        console.log(stars.length);
+        // checkCollision();
+        // removeStars();
         createStars();
         rotateStars();
     };
