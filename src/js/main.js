@@ -29,20 +29,22 @@ function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 } 
 
-// function removeStars(){
-//     newStars = [];
+function removeStars(){
+    newStars = [];
 
-//     for(i = 0; i < this.stars.length; i++){
-//         if(this.stars[i].obj.position.z > plane.obj.position.z){
-//             scene.remove(this.stars[i].obj);
-//         }
-//         else{
-//             newStars.push(this.stars[i]);
-//         }
-//     }
+    for(const star of this.stars){
+        if(star.obj){
+            if(star.obj.position.z > plane.obj.position.z){
+                scene.remove(star.obj);
+            }
+            else{
+                newStars.push(star);
+            }
+        }
+    }
 
-//     this.stars = newStars;
-// }
+    this.stars = newStars;
+}
 
 function createStars(){
     if(plane.dist < 10){
@@ -62,50 +64,39 @@ function createStars(){
 }
 
 function rotateStars(){
-    console.log(this.stars.length);
-    // for(star in this.stars){
-    //     star.obj.rotatation.y += star.AngularVelocity;
-    // }
-    for(i = 0; i < this.stars.length; i++){
-        this.stars[i].obj.rotation.y += this.stars[i].AngularVelocity;
+    for(const star of this.stars){
+        if(star.obj){
+            star.obj.rotation.y += star.AngularVelocity;
+        }
     }
 }
 
-// function checkTouching(a, d) {
-//     let b1 = a.position.y - a.geometry.parameters.height / 2;
-//     let t1 = a.position.y + a.geometry.parameters.height / 2;
-//     let r1 = a.position.x + a.geometry.parameters.width / 2;
-//     let l1 = a.position.x - a.geometry.parameters.width / 2;
-//     let f1 = a.position.z - a.geometry.parameters.depth / 2;
-//     let B1 = a.position.z + a.geometry.parameters.depth / 2;
-//     let b2 = d.position.y - d.geometry.parameters.height / 2;
-//     let t2 = d.position.y + d.geometry.parameters.height / 2;
-//     let r2 = d.position.x + d.geometry.parameters.width / 2;
-//     let l2 = d.position.x - d.geometry.parameters.width / 2;
-//     let f2 = d.position.z - d.geometry.parameters.depth / 2;
-//     let B2 = d.position.z + d.geometry.parameters.depth / 2;
-//     if (t1 < b2 || r1 < l2 || b1 > t2 || l1 > r2 || f1 > B2 || B1 < f2) {
-//       return false;
-//     }
-//     return true;
-//   }
+function checkTouching(firstObj, secondObj) {
+    dist = firstObj.position.distanceTo(secondObj.position);
+    
+    if(dist < 2){
+        return true;
+    }
+    return false;
+  }
 
-// function checkCollision(){
-//     newStars = [];
+function checkCollision(){
+    newStars = [];
 
-//     for(i = 0; i < stars.length; i++){
-//         ans = checkTouching(plane.obj, stars[i].obj);
-//         if(ans == 1){
-//             console.log("HITTT");
-//             scene.remove(stars[i].obj);
-//         }
-//         else{
-//             newStars.push(stars[i]);
-//         }
-//     }
+    for(const star of this.stars){
+        if(star.obj){
+            if(checkTouching(plane.obj, star.obj)){
+                console.log("HITTT");
+                scene.remove(star.obj);
+            }
+            else{
+                newStars.push(star);
+            }
+        }
+    }
 
-//     stars = newStars;
-// }
+    stars = newStars;
+}
 
 function main() {
     scene = new THREE.Scene();
@@ -137,10 +128,11 @@ function main() {
 
     //game logic
     var update = function(){
-        // checkCollision();
-        // removeStars();
+        // star operations
+        removeStars();
         createStars();
         rotateStars();
+        checkCollision();
     };
     
     camera.position.y += 3;
