@@ -73,7 +73,6 @@ function rotateStars(){
 
 function checkTouching(firstObj, secondObj) {
     dist = firstObj.position.distanceTo(secondObj.position);
-    
     if(dist < 2){
         return true;
     }
@@ -126,17 +125,18 @@ function main() {
     plane = new Plane();
     scene.add(plane.obj);
 
+    camera.position.y += 3;
+    camera.rotation.x += -0.2;
+
     //game logic
     var update = function(){
         // star operations
         removeStars();
+        checkCollision();
         createStars();
         rotateStars();
-        checkCollision();
     };
     
-    camera.position.y += 3;
-    camera.rotation.x += -0.2;
     var render = function(){
         renderer.render(scene,camera);
     };
