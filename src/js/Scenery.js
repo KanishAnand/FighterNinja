@@ -17,7 +17,4 @@ class Scenery{
         var cubeMaterial = new THREE.MeshFaceMaterial(cubeMaterials);
         this.obj = new THREE.Mesh(geometry, cubeMaterial);
     }
-
-    // drawCube(){
-    // }
 }
