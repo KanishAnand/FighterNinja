@@ -1,4 +1,4 @@
-var stars = [];
+var stars = [], enemies = [];
 var plane, camera, scenery, scene;
 main();
 
@@ -29,8 +29,9 @@ function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 } 
 
-function removeStars(){
+function removeObjects(){
     newStars = [];
+    newEnemies = [];
 
     for(const star of this.stars){
         if(star.obj){
@@ -41,18 +42,30 @@ function removeStars(){
                 newStars.push(star);
             }
         }
+        else{
+            newStars.push(star);
+        }
     }
-
+    
+    for(const enemy of this.enemies){
+        if(enemy.obj){
+            if(enemy.obj.position.z > camera.position.z){
+                scene.remove(enemy.obj);
+            }
+            else{
+                newEnemies.push(enemy);
+            }
+        }
+        else{
+            newEnemies.push(enemy);
+        }
+    }
+    
     this.stars = newStars;
+    this.enemies = newEnemies;
 }
 
 function createStars(){
-    if(plane.dist < 10){
-        return;
-    }
-    
-    plane.dist = 0;
-
     numStars = parseInt(randomNumber(0,7));
     var x = plane.obj.position.x, deltaX = 10;
     var z = plane.obj.position.z, deltaZ = -5;
@@ -63,10 +76,27 @@ function createStars(){
     }
 }
 
-function rotateStars(){
+function createEnemies(){
+    numEnemies = parseInt(randomNumber(0,2));
+    var x = plane.obj.position.x, deltaX = 10;
+    var z = plane.obj.position.z, deltaZ = -5;
+    
+    for(i = 0; i < numEnemies; i++){
+        // both stars and plane will have same y coordinate
+        this.enemies.push(new Enemy(scene, randomNumber(x - deltaX, x + deltaX), plane.obj.position.y, randomNumber(z + deltaZ, z + 8*deltaZ)));
+    }
+}
+
+function rotateObjects(){
     for(const star of this.stars){
         if(star.obj){
             star.obj.rotation.y += star.AngularVelocity;
+        }
+    }
+ 
+    for(const enemy of this.enemies){
+        if(enemy.obj){
+            enemy.obj.rotation.y += enemy.AngularVelocity;
         }
     }
 }
@@ -81,20 +111,42 @@ function checkTouching(firstObj, secondObj) {
 
 function checkCollision(){
     newStars = [];
+    newEnemies = [];
 
+    // collision of plane with stars
     for(const star of this.stars){
         if(star.obj){
             if(checkTouching(plane.obj, star.obj)){
-                plane.score += star.scoreInc;
+                plane.score += star.scoreChange;
                 scene.remove(star.obj);
             }
             else{
                 newStars.push(star);
             }
         }
+        else{
+            newStars.push(star);
+        }
     }
 
-    stars = newStars;
+    // collision of plane with enemies
+    for(const enemy of this.enemies){
+        if(enemy.obj){
+            if(checkTouching(plane.obj, enemy.obj)){
+                plane.health += enemy.healthChange;
+                scene.remove(enemy.obj);
+            }
+            else{
+                newEnemies.push(enemy);
+            }
+        }
+        else{
+            newEnemies.push(enemy);
+        }
+    }
+
+    this.stars = newStars;
+    this.enemies = newEnemies;
 }
 
 function updateHUD(){
@@ -134,11 +186,24 @@ function main() {
 
     //game logic
     var update = function(){
-        // star operations
-        removeStars();
+        // remove objects which are passed back
+        removeObjects();
+
+        // detect collisions with objects
         checkCollision();
-        createStars();
-        rotateStars();
+
+        if(plane.dist >= 10){
+            //create new objects
+            createStars();
+            createEnemies();
+            plane.dist = 0;
+        }
+
+        rotateObjects();
+
+        if(plane.dist >= 10){
+            plane.dist = 0;
+        }
 
         //update HUD
         updateHUD();
