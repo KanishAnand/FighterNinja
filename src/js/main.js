@@ -1,4 +1,4 @@
-var stars = [], enemies = [], planeBullets = [];
+var stars = [], enemies = [], planeBullets = [], enemyBullets = [];
 var plane, camera, scenery, scene;
 main();
 
@@ -38,6 +38,7 @@ function removeObjects(){
     newStars = [];
     newEnemies = [];
     newplaneBullets = [];
+    newenemyBullets = [];
 
     for(const star of this.stars){
         if(star.obj){
@@ -80,10 +81,25 @@ function removeObjects(){
             newplaneBullets.push(bullet);
         }
     }
+
+    for(const bullet of this.enemyBullets){
+        if(bullet.obj){
+            if(bullet.obj.position.z > camera.position.z){
+                scene.remove(bullet.obj);
+            }
+            else{
+                newenemyBullets.push(bullet);
+            }
+        }
+        else{
+            newenemyBullets.push(bullet);
+        }
+    }
     
     this.stars = newStars;
     this.enemies = newEnemies;
     this.planeBullets = newplaneBullets;
+    this.enemyBullets = newenemyBullets;
 }
 
 function createStars(){
@@ -105,6 +121,20 @@ function createEnemies(){
     for(i = 0; i < numEnemies; i++){
         // both stars and plane will have same y coordinate
         this.enemies.push(new Enemy(scene, randomNumber(x - deltaX, x + deltaX), plane.obj.position.y, randomNumber(z + deltaZ, z + 8*deltaZ)));
+    }
+}
+
+function createEnemyBullets(){
+    for(const enemy of this.enemies){
+        if(enemy.obj){
+            if(enemy.bulletInterval >= enemy.bulletThreshold){
+                this.enemyBullets.push(new EnemyBullets(scene, enemy.obj.position.x , enemy.obj.position.y + 1, enemy.obj.position.z));
+                enemy.bulletInterval = 0;
+            }
+            else{
+                enemy.bulletInterval += 1;
+            }
+        }
     }
 }
 
@@ -139,6 +169,12 @@ function rotatemoveObjects(){
     for(const bullet of this.planeBullets){
         if(bullet.obj){
             bullet.dist += 1;
+            bullet.obj.position.z += bullet.VELOCITY;
+        }
+    }
+
+    for(const bullet of this.enemyBullets){
+        if(bullet.obj){
             bullet.obj.position.z += bullet.VELOCITY;
         }
     }
@@ -224,6 +260,24 @@ function checkCollision(){
         }
     }
     this.planeBullets = newplaneBullets;
+
+    // collision of plane with enemy bullets
+    newenemyBullets = [];
+    for(const bullet of this.enemyBullets){
+        if(bullet.obj){
+            if(checkTouching(plane.obj, bullet.obj)){
+                plane.health += bullet.healthChange;
+                scene.remove(bullet.obj);
+            }
+            else{
+                newenemyBullets.push(bullet);
+            }
+        }
+        else{
+            newenemyBullets.push(bullet);
+        }
+    }
+    this.enemyBullets = newenemyBullets;
 }
 
 function updateHUD(){
@@ -275,6 +329,8 @@ function main() {
             createEnemies();
             plane.dist = 0;
         }
+
+        createEnemyBullets();
 
         rotatemoveObjects();
 

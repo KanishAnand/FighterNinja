@@ -7,6 +7,8 @@ class Enemy{
         this.finaldistThreshold = 2*this.distThreshold;
         this.AngularVelocity = 0.05;
         this.healthChange = -10;
+        this.bulletInterval = 0;
+        this.bulletThreshold = 30;
         this.initRenderData(scene, x, y, z);
     }
     
