@@ -1,4 +1,4 @@
-var stars = [], enemies = [];
+var stars = [], enemies = [], planeBullets = [];
 var plane, camera, scenery, scene;
 main();
 
@@ -22,6 +22,11 @@ function onDocumentKeyDown(event) {
         plane.obj.position.x += plane.VELOCITY;
         // scenery.obj.position.x += plane.VELOCITY;
     }
+    else if(keyCode == 32){
+        // space: fire bullets on enemies
+        this.planeBullets.push(new PlaneBullets(scene, plane.obj.position.x - 0.8, plane.obj.position.y, plane.obj.position.z - 1));
+        this.planeBullets.push(new PlaneBullets(scene, plane.obj.position.x + 0.8, plane.obj.position.y, plane.obj.position.z - 1));
+    }
 };
 
 // Function to generate random number 
@@ -32,6 +37,7 @@ function randomNumber(min, max) {
 function removeObjects(){
     newStars = [];
     newEnemies = [];
+    newplaneBullets = [];
 
     for(const star of this.stars){
         if(star.obj){
@@ -60,9 +66,24 @@ function removeObjects(){
             newEnemies.push(enemy);
         }
     }
+
+    for(const bullet of this.planeBullets){
+        if(bullet.obj){
+            if(bullet.dist > 10){
+                scene.remove(bullet.obj);
+            }
+            else{
+                newplaneBullets.push(bullet);
+            }
+        }
+        else{
+            newplaneBullets.push(bullet);
+        }
+    }
     
     this.stars = newStars;
     this.enemies = newEnemies;
+    this.planeBullets = newplaneBullets;
 }
 
 function createStars(){
@@ -87,7 +108,7 @@ function createEnemies(){
     }
 }
 
-function rotateObjects(){
+function rotatemoveObjects(){
     for(const star of this.stars){
         if(star.obj){
             star.obj.rotation.y += star.AngularVelocity;
@@ -114,6 +135,13 @@ function rotateObjects(){
             enemy.obj.rotation.y += enemy.AngularVelocity;
         }
     }
+
+    for(const bullet of this.planeBullets){
+        if(bullet.obj){
+            bullet.dist += 1;
+            bullet.obj.position.z += bullet.VELOCITY;
+        }
+    }
 }
 
 function checkTouching(firstObj, secondObj) {
@@ -125,10 +153,8 @@ function checkTouching(firstObj, secondObj) {
   }
 
 function checkCollision(){
-    newStars = [];
-    newEnemies = [];
-
     // collision of plane with stars
+    newStars = [];
     for(const star of this.stars){
         if(star.obj){
             if(checkTouching(plane.obj, star.obj)){
@@ -143,8 +169,10 @@ function checkCollision(){
             newStars.push(star);
         }
     }
-
+    this.stars = newStars;
+    
     // collision of plane with enemies
+    newEnemies = [];
     for(const enemy of this.enemies){
         if(enemy.obj){
             if(checkTouching(plane.obj, enemy.obj)){
@@ -159,9 +187,43 @@ function checkCollision(){
             newEnemies.push(enemy);
         }
     }
-
-    this.stars = newStars;
     this.enemies = newEnemies;
+
+    // collision of plane bullets with enemies;
+    newplaneBullets = [];
+    for(const bullet of this.planeBullets){
+        if(bullet.obj){
+            flag = false
+            newEnemies = [];
+            for(const enemy of this.enemies){
+                if(enemy.obj){
+                    if(checkTouching(bullet.obj, enemy.obj)){
+                        flag = true;
+                        scene.remove(enemy.obj);
+                    }
+                    else{
+                        newEnemies.push(enemy);    
+                    }
+                }
+                else{
+                    newEnemies.push(enemy);
+                }
+            }
+
+            this.enemies = newEnemies;
+            if(flag){
+                plane.score += bullet.firedScore;
+                scene.remove(bullet.obj);
+            }
+            else{
+                newplaneBullets.push(bullet);
+            }
+        }
+        else{
+            newplaneBullets.push(bullet);
+        }
+    }
+    this.planeBullets = newplaneBullets;
 }
 
 function updateHUD(){
@@ -214,7 +276,7 @@ function main() {
             plane.dist = 0;
         }
 
-        rotateObjects();
+        rotatemoveObjects();
 
         if(plane.dist >= 10){
             plane.dist = 0;
