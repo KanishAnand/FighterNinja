@@ -96,6 +96,21 @@ function rotateObjects(){
  
     for(const enemy of this.enemies){
         if(enemy.obj){
+            if(enemy.direction == 1){
+                enemy.vertDist++;
+                enemy.obj.position.y += enemy.vertSpeed;
+            }
+            else{
+                enemy.vertDist++;
+                enemy.obj.position.y -= enemy.vertSpeed;
+            }
+            
+            if(enemy.vertDist >= enemy.distThreshold){
+                enemy.vertDist = 0;
+                enemy.distThreshold = enemy.finaldistThreshold;
+                enemy.direction = 1 - enemy.direction;
+            }
+            
             enemy.obj.rotation.y += enemy.AngularVelocity;
         }
     }
@@ -103,7 +118,7 @@ function rotateObjects(){
 
 function checkTouching(firstObj, secondObj) {
     dist = firstObj.position.distanceTo(secondObj.position);
-    if(dist < 2){
+    if(dist < 1){
         return true;
     }
     return false;
