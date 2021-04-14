@@ -1,11 +1,13 @@
-# lighting
+# enemey object
 
-# fire
+# lighting: bombs are not visible
+
+# Make ur own objects in blender
+
+# exit game when health 0
+
+# Game start page
 
 # shadow
 
-# blender
-
-# objects
-
-# skybox
+# fire
