@@ -29,7 +29,7 @@ class Scenery{
             }
         );
 
-        this.waterObj.position.y -= 5;
+        this.waterObj.position.y -= 4;
         this.waterObj.rotation.x = - Math.PI / 2;
 
         scene.add(this.waterObj);
@@ -41,10 +41,10 @@ class Scenery{
 
         const skyUniforms = this.skyObj.material.uniforms;
 
-        skyUniforms[ 'turbidity' ].value = 10;
-        skyUniforms[ 'rayleigh' ].value = 2;
-        skyUniforms[ 'mieCoefficient' ].value = 0.005;
-        skyUniforms[ 'mieDirectionalG' ].value = 0.8;
+        skyUniforms['turbidity'].value = 10;
+        skyUniforms['rayleigh'].value = 2;
+        skyUniforms['mieCoefficient'].value = 0.005;
+        skyUniforms['mieDirectionalG'].value = 0.8;
 
         // sun
         this.sunObj = new THREE.Vector3();

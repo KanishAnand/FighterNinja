@@ -56,6 +56,9 @@ function removeObjects(){
             if(enemy.obj.position.z > camera.position.z){
                 scene.remove(enemy.obj);
             }
+            else if(enemy.obj.position.y <= -10){
+                scene.remove(enemy.obj);
+            }
             else{
                 newEnemies.push(enemy);
             }
@@ -67,7 +70,7 @@ function removeObjects(){
 
     for(const bullet of this.planeBullets){
         if(bullet.obj){
-            if(bullet.dist > 10){
+            if(bullet.dist > 20){
                 scene.remove(bullet.obj);
             }
             else{
@@ -111,13 +114,16 @@ function createStars(){
 }
 
 function createEnemies(){
-    numEnemies = parseInt(randomNumber(0,2));
-    var x = plane.obj.position.x, deltaX = 10;
-    var z = plane.obj.position.z, deltaZ = -5;
+    var posx = plane.obj.position.x - 5, deltaX = 10;
+    var posz = plane.obj.position.z - 60, deltaZ = -200;
+    var x = randomNumber(posx - deltaX, posx);
+    var z = randomNumber(posz - deltaZ, posz);
+    var y = plane.obj.position.y + 1;
+    var offset = 1;
     
+    numEnemies = 4;
     for(i = 0; i < numEnemies; i++){
-        // both stars and plane will have same y coordinate
-        this.enemies.push(new Enemy(scene, randomNumber(x - deltaX, x + deltaX), plane.obj.position.y, randomNumber(z + deltaZ, z + 8*deltaZ)));
+        this.enemies.push(new Enemy(scene, x - i*offset, y + i*offset, z - i*offset));
     }
 }
 
@@ -144,22 +150,12 @@ function rotatemoveObjects(){
  
     for(const enemy of this.enemies){
         if(enemy.obj){
-            if(enemy.direction == 1){
-                enemy.vertDist++;
-                enemy.obj.position.y += enemy.vertSpeed;
+            enemy.obj.position.x += enemy.SPEEDX;
+            enemy.obj.position.y += enemy.SPEEDY;
+            enemy.obj.position.z += enemy.SPEEDZ;
+            if((plane.obj.position.z - enemy.obj.position.z) <= 5){
+                enemy.SPEEDZ = -enemy.SPEEDZ;
             }
-            else{
-                enemy.vertDist++;
-                enemy.obj.position.y -= enemy.vertSpeed;
-            }
-            
-            if(enemy.vertDist >= enemy.distThreshold){
-                enemy.vertDist = 0;
-                enemy.distThreshold = enemy.finaldistThreshold;
-                enemy.direction = 1 - enemy.direction;
-            }
-            
-            enemy.obj.rotation.y += enemy.AngularVelocity;
         }
     }
 
@@ -305,7 +301,7 @@ function main() {
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     
-    camera.position.set(0,10,12);
+    camera.position.set(0,5,8);
     camera.rotation.x += -0.4;
 
     scenery = new Scenery(scene, renderer);
