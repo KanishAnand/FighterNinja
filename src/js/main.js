@@ -1,5 +1,6 @@
 var stars = [], enemies = [], planeBullets = [], enemyBullets = [];
 var plane, camera, scenery, scene;
+
 main();
 
 function onDocumentKeyDown(event) {
@@ -8,19 +9,15 @@ function onDocumentKeyDown(event) {
         camera.position.z -= plane.VELOCITY;
         plane.obj.position.z -= plane.VELOCITY;
         plane.dist += 1;
-        // scenery.obj.position.z -= plane.VELOCITY;
     } else if (keyCode == 40) { // down
         camera.position.z += plane.VELOCITY;
         plane.obj.position.z += plane.VELOCITY;
-        // scenery.obj.position.z += plane.VELOCITY;
     } else if (keyCode == 37) { // left
         camera.position.x -= plane.VELOCITY;
         plane.obj.position.x -= plane.VELOCITY;
-        // scenery.obj.position.x -= plane.VELOCITY;
     } else if (keyCode == 39) { // right
         camera.position.x += plane.VELOCITY;
         plane.obj.position.x += plane.VELOCITY;
-        // scenery.obj.position.x += plane.VELOCITY;
     }
     else if(keyCode == 32){
         // space: fire bullets on enemies
@@ -290,11 +287,12 @@ function main() {
     var Light = new THREE.DirectionalLight(0x404040,10);
     scene.add(Light);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth/ window.innerHeight, 0.1, 10000);
-    camera.position.z = 6;
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth/ window.innerHeight, 1, 20000);
     
     var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
     document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', function(){
@@ -306,14 +304,14 @@ function main() {
     window.addEventListener("keydown", onDocumentKeyDown, false);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    scenery = new Scenery();
-    scene.add(scenery.obj);
     
+    camera.position.set(0,10,12);
+    camera.rotation.x += -0.4;
+
+    scenery = new Scenery(scene, renderer);
     plane = new Plane(scene);
 
-    camera.position.y += 3;
-    camera.rotation.x += -0.2;
+    scenery.updateSun(scene);
 
     //game logic
     var update = function(){
@@ -343,6 +341,8 @@ function main() {
     };
     
     var render = function(){
+        scenery.waterObj.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+
         renderer.render(scene,camera);
     };
     
