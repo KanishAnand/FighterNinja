@@ -9,7 +9,7 @@ class Plane{
     
     initRenderData(scene){
         var loader = new THREE.GLTFLoader();
-        loader.load("src/models/plane.glb", (obj) => {
+        loader.load("src/models/planePrev.glb", (obj) => {
             obj.scene.scale.set(0.8,0.5,0.6);
             this.obj = obj.scene;
             scene.add(obj.scene);

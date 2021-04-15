@@ -1,5 +1,6 @@
-var stars = [], enemies = [], planeBullets = [], enemyBullets = [];
-var plane, camera, scenery, scene;
+var stars = [], enemies = [], planeBullets = [], enemyBullets = [], fireBlast = [];
+var plane, camera, scenery, scene, fire, renderer;
+var firevertShader, firefragShader;
 
 main();
 
@@ -36,6 +37,7 @@ function removeObjects(){
     newEnemies = [];
     newplaneBullets = [];
     newenemyBullets = [];
+    newfireBlast = [];
 
     for(const star of this.stars){
         if(star.obj){
@@ -95,11 +97,21 @@ function removeObjects(){
             newenemyBullets.push(bullet);
         }
     }
+
+    for(const blast of this.fireBlast){
+        if(blast.mesh.position.y >= 10){
+            scene.remove(blast.mesh);
+        }
+        else{
+            newfireBlast.push(blast);
+        }
+    }
     
     this.stars = newStars;
     this.enemies = newEnemies;
     this.planeBullets = newplaneBullets;
     this.enemyBullets = newenemyBullets;
+    this.fireBlast = newfireBlast;
 }
 
 function createStars(){
@@ -205,6 +217,7 @@ function checkCollision(){
     for(const enemy of this.enemies){
         if(enemy.obj){
             if(checkTouching(plane.obj, enemy.obj)){
+                fireBlast.push(new Fire(scene, camera, renderer, firevertShader, firefragShader, plane.obj.position.x, plane.obj.position.y, plane.obj.position.z));
                 plane.health += enemy.healthChange;
                 scene.remove(enemy.obj);
             }
@@ -238,7 +251,7 @@ function checkCollision(){
                     newEnemies.push(enemy);
                 }
             }
-
+            
             this.enemies = newEnemies;
             if(flag){
                 plane.score += bullet.firedScore;
@@ -253,12 +266,13 @@ function checkCollision(){
         }
     }
     this.planeBullets = newplaneBullets;
-
+    
     // collision of plane with enemy bullets
     newenemyBullets = [];
     for(const bullet of this.enemyBullets){
         if(bullet.obj){
             if(checkTouching(plane.obj, bullet.obj)){
+                fireBlast.push(new Fire(scene, camera, renderer, firevertShader, firefragShader, plane.obj.position.x, plane.obj.position.y, plane.obj.position.z));
                 plane.health += bullet.healthChange;
                 scene.remove(bullet.obj);
             }
@@ -285,7 +299,7 @@ function main() {
 
     camera = new THREE.PerspectiveCamera(55, window.innerWidth/ window.innerHeight, 1, 20000);
     
-    var renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -305,9 +319,13 @@ function main() {
     camera.rotation.x += -0.4;
 
     scenery = new Scenery(scene, renderer);
+    scenery.updateSun(scene);
+
     plane = new Plane(scene);
 
-    scenery.updateSun(scene);
+    firevertShader = document.getElementById( 'vertexShader' ).textContent;
+	firefragShader = document.getElementById( 'fragmentShader' ).textContent;
+    clock = new THREE.Clock();
 
     //game logic
     var update = function(){
@@ -332,13 +350,19 @@ function main() {
             plane.dist = 0;
         }
 
-        //update HUD
         updateHUD();
     };
     
     var render = function(){
+        const delta = 5 * clock.getDelta();
+        for(const blast of this.fireBlast){
+            blast.uniforms['time'].value += 0.2 * delta;
+            blast.mesh.position.y += blast.SPEEDY;
+            blast.composer.render( 0.01 );
+        }
+        
         scenery.waterObj.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-
+        
         renderer.render(scene,camera);
     };
     
