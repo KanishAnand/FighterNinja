@@ -21,7 +21,7 @@ class Fire{
         this.uniforms[ "texture1" ].value.wrapS = this.uniforms[ "texture1" ].value.wrapT = THREE.RepeatWrapping;
         this.uniforms[ "texture2" ].value.wrapS = this.uniforms[ "texture2" ].value.wrapT = THREE.RepeatWrapping;
 
-        const size = 0.35;
+        const size = 0.25;
 
         const material = new THREE.ShaderMaterial( {
             uniforms: this.uniforms,

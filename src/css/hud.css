@@ -2,18 +2,26 @@
   position: absolute;
   font-size: 25px;
   width: 100%;
-  color: white;
+  font-weight: 600;
+  color: black;
   z-index: 100;
   display: block;
 }
 
 #score {
   margin: 10px;
+  margin-left: 20px;
   text-align: left;
 }
 
 #health {
-  margin: 15px;
-  margin-top: 10px;
+  margin: 10px;
+  margin-left: 20px;
+  text-align: left;
+}
+
+#time {
+  margin: 10px;
+  margin-left: 20px;
   text-align: left;
 }

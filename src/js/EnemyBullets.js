@@ -7,11 +7,12 @@ class EnemyBullets{
     
     initRenderData(scene, x, y, z){
         var loader = new THREE.GLTFLoader();
-        loader.load("src/models/enemyBomb.glb", (obj) => {
+        loader.load("src/models/enemyBullet.glb", (obj) => {
             obj.scene.scale.set(0.05,0.05,0.05);
             obj.scene.position.x = x;
             obj.scene.position.y = y;
             obj.scene.position.z = z;
+            obj.scene.rotation.y += Math.PI;
             this.obj = obj.scene;
             scene.add(obj.scene);
         });

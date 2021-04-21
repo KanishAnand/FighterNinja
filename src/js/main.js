@@ -1,5 +1,5 @@
 var stars = [], enemies = [], planeBullets = [], enemyBullets = [], fireBlast = [];
-var plane, camera, scenery, scene, fire, renderer;
+var plane, camera, scenery, scene, fire, renderer, time = 0;
 var firevertShader, firefragShader;
 
 main();
@@ -127,15 +127,15 @@ function createStars(){
 
 function createEnemies(){
     var posx = plane.obj.position.x - 5, deltaX = 10;
-    var posz = plane.obj.position.z - 60, deltaZ = -200;
+    var posz = plane.obj.position.z - 30, deltaZ = 100;
     var x = randomNumber(posx - deltaX, posx);
     var z = randomNumber(posz - deltaZ, posz);
-    var y = plane.obj.position.y + 1;
+    var y = plane.obj.position.y ;
     var offset = 1;
     
-    numEnemies = 4;
+    numEnemies = 3;
     for(i = 0; i < numEnemies; i++){
-        this.enemies.push(new Enemy(scene, x - i*offset, y + i*offset, z - i*offset));
+        this.enemies.push(new Enemy(scene, x - i*offset, y, z - i*offset));
     }
 }
 
@@ -143,7 +143,9 @@ function createEnemyBullets(){
     for(const enemy of this.enemies){
         if(enemy.obj){
             if(enemy.bulletInterval >= enemy.bulletThreshold){
-                this.enemyBullets.push(new EnemyBullets(scene, enemy.obj.position.x , enemy.obj.position.y + 1, enemy.obj.position.z));
+                if(randomNumber(0,1) <= 0.3){
+                    this.enemyBullets.push(new EnemyBullets(scene, enemy.obj.position.x , enemy.obj.position.y + 1, enemy.obj.position.z));
+                }
                 enemy.bulletInterval = 0;
             }
             else{
@@ -165,7 +167,9 @@ function rotatemoveObjects(){
             enemy.obj.position.x += enemy.SPEEDX;
             enemy.obj.position.y += enemy.SPEEDY;
             enemy.obj.position.z += enemy.SPEEDZ;
-            if((plane.obj.position.z - enemy.obj.position.z) <= 5){
+            if(enemy.flag == 0 && (plane.obj.position.z - enemy.obj.position.z) <= 5){
+                enemy.flag = 1;
+                enemy.obj.rotation.y += Math.PI;
                 enemy.SPEEDZ = -enemy.SPEEDZ;
             }
         }
@@ -290,6 +294,7 @@ function checkCollision(){
 function updateHUD(){
     document.getElementById("score").innerHTML = "Score: " + plane.score;
     document.getElementById("health").innerHTML = "Health: " + plane.health;
+    document.getElementById("time").innerHTML = "Time Left: " + plane.time;
 }
 
 function main() {
@@ -329,26 +334,51 @@ function main() {
 
     //game logic
     var update = function(){
+        if(plane.score >= 50){
+            document.getElementById("over").innerHTML = "Game Won!";
+            return;
+        }
+
+        if(plane.time <= 0){
+            plane.time = 0;
+            document.getElementById("over").innerHTML = "Game Over!";
+            return;
+        }
+
+        if(plane.health <= 0){
+            plane.health = 0;
+            document.getElementById("over").innerHTML = "Game Over!";
+            return;
+        }
+
         // remove objects which are passed back
         removeObjects();
 
         // detect collisions with objects
         checkCollision();
-
+        
         if(plane.dist >= 10){
             //create new objects
             createStars();
             createEnemies();
             plane.dist = 0;
         }
-
+        
         createEnemyBullets();
-
+        
         rotatemoveObjects();
 
         if(plane.dist >= 10){
             plane.dist = 0;
         }
+
+        time += 1;
+        if(time == 50){
+            time = 0;
+            plane.time -= 1;
+        }
+        plane.health = Math.max(plane.health, 0);
+        plane.time = Math.max(plane.time, 0);
 
         updateHUD();
     };
