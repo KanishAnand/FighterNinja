@@ -58,7 +58,7 @@ function removeObjects(){
             if(enemy.obj.position.z > camera.position.z){
                 scene.remove(enemy.obj);
             }
-            else if(enemy.obj.position.y <= -10){
+            else if(enemy.flag == 1 &&  plane.obj.position.z - enemy.obj.position.z >= 30){
                 scene.remove(enemy.obj);
             }
             else{
@@ -144,7 +144,7 @@ function createEnemyBullets(){
         if(enemy.obj){
             if(enemy.bulletInterval >= enemy.bulletThreshold){
                 if(randomNumber(0,1) <= 0.3){
-                    this.enemyBullets.push(new EnemyBullets(scene, enemy.obj.position.x , enemy.obj.position.y + 1, enemy.obj.position.z));
+                    this.enemyBullets.push(new EnemyBullets(scene, enemy.obj.position.x , enemy.obj.position.y, enemy.obj.position.z));
                 }
                 enemy.bulletInterval = 0;
             }
@@ -334,14 +334,9 @@ function main() {
 
     //game logic
     var update = function(){
-        if(plane.score >= 50){
-            document.getElementById("over").innerHTML = "Game Won!";
-            return;
-        }
-
         if(plane.time <= 0){
             plane.time = 0;
-            document.getElementById("over").innerHTML = "Game Over!";
+            document.getElementById("over").innerHTML = "Game Won!";
             return;
         }
 
@@ -357,7 +352,7 @@ function main() {
         // detect collisions with objects
         checkCollision();
         
-        if(plane.dist >= 10){
+        if(plane.dist >= 15){
             //create new objects
             createStars();
             createEnemies();
@@ -368,7 +363,7 @@ function main() {
         
         rotatemoveObjects();
 
-        if(plane.dist >= 10){
+        if(plane.dist >= 15){
             plane.dist = 0;
         }
 
