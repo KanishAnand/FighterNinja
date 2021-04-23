@@ -1,1 +1,4 @@
 *models/
+trailer/files/*
+trailer/blendcache_trailer/*
+trailer/video/*
