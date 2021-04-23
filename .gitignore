@@ -1,4 +1,6 @@
 *models/
+trailer/frames/*
 trailer/files/*
 trailer/blendcache_takeOff/*
+trailer/blendcache_stars/*
 trailer/video/*
