@@ -167,7 +167,7 @@ function rotatemoveObjects(){
             enemy.obj.position.x += enemy.SPEEDX;
             enemy.obj.position.y += enemy.SPEEDY;
             enemy.obj.position.z += enemy.SPEEDZ;
-            if(enemy.flag == 0 && (plane.obj.position.z - enemy.obj.position.z) <= 5){
+            if(enemy.flag == 0 && (plane.obj.position.z - enemy.obj.position.z) <= 0){
                 enemy.flag = 1;
                 enemy.obj.rotation.y += Math.PI;
                 enemy.SPEEDZ = -enemy.SPEEDZ;
