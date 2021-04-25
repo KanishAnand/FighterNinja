@@ -8,7 +8,7 @@ class PlaneBullets{
     
     initRenderData(scene, x, y, z){
         var loader = new THREE.GLTFLoader();
-        loader.load("src/models/missile.glb", (obj) => {
+        loader.load("src/models/bullet.glb", (obj) => {
             obj.scene.scale.set(0.05,0.05,0.05);
             obj.scene.position.x = x;
             obj.scene.position.y = y;

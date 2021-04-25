@@ -276,7 +276,7 @@ function checkCollision(){
     for(const bullet of this.enemyBullets){
         if(bullet.obj){
             if(checkTouching(plane.obj, bullet.obj)){
-                fireBlast.push(new Fire(scene, camera, renderer, firevertShader, firefragShader, plane.obj.position.x, plane.obj.position.y, plane.obj.position.z));
+                // fireBlast.push(new Fire(scene, camera, renderer, firevertShader, firefragShader, plane.obj.position.x, plane.obj.position.y, plane.obj.position.z));
                 plane.health += bullet.healthChange;
                 scene.remove(bullet.obj);
             }

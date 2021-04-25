@@ -10,7 +10,7 @@ class Plane{
     
     initRenderData(scene){
         var loader = new THREE.GLTFLoader();
-        loader.load("src/models/planeSimple.glb", (obj) => {
+        loader.load("src/models/plane.glb", (obj) => {
             obj.scene.scale.set(0.1,0.1,0.1);
             obj.scene.rotation.y += Math.PI;
             this.obj = obj.scene;
