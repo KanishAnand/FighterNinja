@@ -4,12 +4,12 @@ This is a clone of game [SkyForce](https://play.google.com/store/apps/details?id
 
 ![img](src/img/display.jpg)
 
-# Run
+## Run
 
 - Run command `php -S localhost:8000`
 - Head over to: http://localhost:8000/index.html
 
-# Keys
+## Keys
 
 - ArrowUp - Move plane Forward
 - ArrowDown - Move plane BackWard
@@ -17,6 +17,6 @@ This is a clone of game [SkyForce](https://play.google.com/store/apps/details?id
 - ArrowRight - Move plane Right
 - SpaceBar - Shoot Missiles
 
-# Trailer Link
+## Trailer Link
 
 Trailer for game was made using Blender. You can watch it [here](https://youtu.be/QKSnof-FOoc) 😎
